@@ -1,37 +1,39 @@
 import speech_recognition as sr
-import pyttsx3 as txt
-import pywhatkit as pw
-import datetime as dt
+import pyttsx3
+import pywhatkit
+import datetime
 import wikipedia
 import pyjokes
 import webbrowser
 import requests
 import json
+import subprocess
+import platform
 
 listener = sr.Recognizer()
-Xaamp = txt.init()
+alexa = pyttsx3.init()
 
 # Set female voice
-voices = Xaamp.getProperty('voices')
-Xaamp.setProperty('voice', voices[1].id)
-Xaamp.setProperty('rate', 150)
+voices =alexa.getProperty('voices')
+alexa.setProperty('voice', voices[1].id)
+alexa.setProperty('rate', 150)
 
 def talk(text):
-    Xaamp.say(text)
-    Xaamp.runAndWait()
+    alexa.say(text)
+    alexa.runAndWait()
 
 def get_command_from_microphone():
     try:
-        with sr.Microphone() as source:
+        with sr.Microphone(device_index=0) as source:
             print('Listening...')
             voice = listener.listen(source)
             command = listener.recognize_google(voice)
             command = command.lower()
-            if 'Xaamp' in command:
-                command = command.replace('Xaamp', '')
-                print(command)
+            if 'alexa' in command:
+                command = command.replace('alexa', '')
     except: 
         pass
+    return command
 
 def get_joke():
     try:
@@ -58,69 +60,81 @@ def get_weather(city):
             return "Sorry, I couldn't fetch the weather information."
     except requests.exceptions.RequestException:
         return "Sorry, I couldn't fetch the weather information."
+# def open_website(website_url):
+#     system = platform.system()
+#     try:
+#         if system == 'Windows':
+#             subprocess.Popen(['start', '', website_url], shell=True)
+#         elif system == 'Darwin':  # macOS
+#             subprocess.Popen(['open', website_url])
+#         else:  # Linux
+#             subprocess.Popen(['xdg-open', website_url])
+#         talk(f"Opening website: {website_url}")
+#     except OSError:
+#         talk(f"Sorry, I couldn't open the website.")
 
-def play_Xaamp():
-    current_hour = dt.datetime.now().hour
-    if current_hour < 12:
-        greeting = "Good morning"
-    elif current_hour < 18:
+
+current_hour = datetime.datetime.now().hour
+if current_hour < 12:
+    greeting = "Good morning"
+elif current_hour < 18:
         greeting = "Good afternoon"
-    else:
-        greeting = "Good evening"
+else:
+    greeting = "Good evening"
+talk(greeting + " I'm alexa. How can I help you today?")
 
-    talk(greeting + " I'm Xaamp. How can I help you today?")
+def play_alexa():
 
     command = get_command_from_microphone()
-    print(command)
 
     if 'play' in command:
         talk('Playing')
-        song = command.replace('play', '').strip()
-        pw.playonyt(song)
+        song = command.replace('play', '')
+        pywhatkit.playonyt(song)
     elif 'time' in command:
-        current_time = dt.datetime.now().strftime('%I:%M %p')
+        current_time = datetime.datetime.now().strftime('%I:%M %p')
         talk('The current time is ' + current_time)
     elif 'date' in command:
-        current_date = dt.datetime.now().strftime('%d / %m / %Y')
+        current_date = datetime.datetime.now().strftime('%d / %m / %Y')
         talk('Today is ' + current_date)
     elif 'are you single' in command:
         talk('No, I am in a relationship with WiFi')
     elif 'joke' in command:
-        joke = get_joke()
-        talk('Sure, here is a joke for you...')
-        talk(joke)
+        talk(pyjokes.get_joke())
     elif 'name' in command:
-        talk('I am Xaamp. How can I help you today?')
+        talk('I am alexa. How can I help you today?')
     elif 'weather' in command:
         city = command.replace('weather', '').strip()
         weather_report = get_weather(city)
         talk(weather_report)
     elif 'who is' in command:
         person = command.replace('who is', '').strip()
-        pw.info(person, 1)
+        info=wikipedia.summary(person,1)
+        print(info)
+        talk(info)
     elif 'what is' in command:
         thing = command.replace('what is', '').strip()
-        pw.info(thing, 1)
+        pywhatkit.info(thing, 1)
     elif 'where is' in command:
         place = command.replace('where is', '').strip()
-        pw.info(place, 1)
+        pywhatkit.info(place, 1)
     elif 'how to' in command:
         task = command.replace('how to', '').strip()
-        pw.info(task, 1)
+        pywhatkit.info(task, 1)
     elif 'search' in command:
         query = command.replace('search', '').strip()
-        pw.search(query)
-    elif 'open' in command:
-        app = command.replace('open', '').strip()
-        pw.playonyt(app)
+        pywhatkit.search(query)
+    # elif 'open' in command:
+    #     website = command.replace('open website', '').strip()
+    #     open_website(website)
     elif 'thank you' in command:
         talk('You are welcome')
     elif 'exit' in command:
-        talk('Thank you for using Xaamp. Have a nice day.')
+        talk('Thank you for using alexa. Have a nice day.')
         exit()
     else:
         talk('Sorry, I cannot understand but i can search it for you')
-        pw.search(command)
+        pywhatkit.search(command)
 
 while True:
-    play_Xaamp()
+    play_alexa()
