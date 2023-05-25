@@ -1,0 +1,43 @@
+Python Assignment 01 
+Marks
+
+
+Problem - 1
+
+Write Python program to solve Max Split				              20
+
+Problem - 2
+
+Write Python program to solve Good Sequence
+												    20
+Problem - 3
+
+a
+
+Write the difference between List and Dictionary of Python.
+											     10
+					b
+
+Write about *args and **kwargs of Python with proper examples.
+											     10
+
+Problem - 4
+
+Write Python program to solve Minimize Number
+
+
+Problem - 5
+
+Take a number from the user and draw a pyramid using PyAutoGUI									    20
+
+Sample : 
+5
+#
+##
+###
+####
+#####
+
+
+
+
