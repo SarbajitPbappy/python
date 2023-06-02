@@ -1,5 +1,6 @@
 # poly-->many
 # morph-->shape
+# inheritance
 from math import pi
 
 class Shape:
@@ -47,7 +48,7 @@ class Triangle(Shape):
         return self.a+self.b+self.c
     def __str__(self) -> str:
         return f"{super().__str__()} {self.a} {self.b} {self.c}"
-
+# main function
 s1=Rectangele("Rectangle",10,20)
 print(s1)
 print(s1.area())
