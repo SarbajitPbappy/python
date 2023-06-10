@@ -39,7 +39,7 @@ class Bank:
         self.loan_features = not self.loan_features
 
 
-class User:
+class User(Bank):
     def __init__(self, name, email, address, nid, opening_deposit, account_type, password):
         self.name = name
         self.email = email
@@ -59,6 +59,8 @@ class User:
 
     def deposit(self, amount):
         self.balance += amount
+        bank = Bank()
+        bank.total_balance += amount
         return f"Your new balance is {self.balance}"
 
     def withdraw(self, amount):
